@@ -65,13 +65,34 @@ options:
 EXAMPLES = r'''
 - name: Wait for server to start
   rkozlo.valkey.valkey_wait:
-    state: ready
 
 - name: Wait for server to start changing intervals
   rkozlo.valkey.valkey_wait:
-    state: ready
     interval: 5
     retries: 10
+
+- name: Wait for replica to connect
+  rkozlo.valkey.valkey_wait:
+    conditions:
+      role: master
+      connected_slaves: 1
+      replicas_waiting_psync: 0
+
+- name: Wait for replication to sync
+  rkozlo.valkey.valkey_wait:
+    conditions:
+      role: slave
+      master_link_status: up
+
+- name: Wait rdb loading
+  rkozlo.valkey.valkey_wait:
+    conditions:
+      loading: 0
+
+- name: Wait aof finished to rewrite
+  rkozlo.valkey.valkey_wait:
+    conditions:
+      aof_rewrite_in_progress: 0
 '''
 
 RETURN = r'''
